@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線性規劃入門｜教學簡報</title>
+<style>
+:root{--bg:#f6f3ec;--ink:#22252b;--mute:#6b6f76;--acc:#1f7a5c;--acc2:#c8553d;--card:#fff;--line:#e3ddd0}
+*{box-sizing:border-box;margin:0;padding:0;font-feature-settings:"calt" 0,"liga" 0}
+html,body{background:#2a2d33;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;color:var(--ink)}
+#wrap{position:relative;margin:0 auto;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;background:var(--bg);overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.slide{position:absolute;inset:0;display:none;flex-direction:column}
+.slide.on{display:flex}
+.inner{flex:1;padding:56px 80px 20px;display:flex;flex-direction:column;min-height:0}
+h2{font-size:42px;font-weight:700;letter-spacing:.5px;margin-bottom:28px;padding-left:18px;border-left:8px solid var(--acc)}
+.content{flex:1;font-size:26px;line-height:1.65;min-height:0;overflow:hidden}
+.content p{margin-bottom:14px}.content ul,.content ol{padding-left:34px}.content li{margin-bottom:10px}
+b{color:var(--acc)}
+.big{font-size:34px;margin:6px 0 24px}
+.q{margin-top:20px;font-size:28px;color:var(--acc2);font-weight:600}
+footer{height:44px;padding:0 80px;display:flex;justify-content:space-between;align-items:center;font-size:15px;color:var(--mute);border-top:1px solid var(--line)}
+footer span{margin-right:200px}
+.cover .inner{justify-content:center;padding-left:120px}
+.cover h2{font-size:76px;border:none;padding:0;margin-bottom:20px}
+.cover .sub{font-size:32px;color:var(--acc)}.cover .meta{font-size:20px;color:var(--mute);margin-top:30px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:22px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px}
+.cards h3{font-size:28px;margin-bottom:8px}.cards p{font-size:22px;color:var(--mute)}
+code,pre{font-family:"JetBrains Mono",Consolas,monospace}
+.cards code{display:inline-block;margin-top:8px;font-size:20px;background:#eef5f1;padding:4px 10px;border-radius:6px}
+pre{background:#22252b;color:#e9efe9;font-size:26px;line-height:1.55;padding:24px 32px;border-radius:12px;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:24px;background:var(--card);margin-bottom:16px}
+th,td{border:1px solid var(--line);padding:10px 18px;text-align:left}th{background:#eef5f1}
+tr.hl td{background:#fff4d6;font-weight:700}
+.timeline{list-style:none;padding:0!important;border-left:4px solid var(--acc);margin-left:10px}
+.timeline li{padding-left:24px;position:relative}.timeline li:before{content:"";position:absolute;left:-12px;top:14px;width:16px;height:16px;border-radius:50%;background:var(--acc)}
+.split{display:grid;grid-template-columns:620px 1fr;gap:36px;align-items:center}.split p{font-size:24px}
+.chart{width:620px;height:420px}
+.grid{stroke:#e3ddd0;stroke-width:1}.tick{font-size:13px;fill:#6b6f76}.ax{font-size:15px;fill:#22252b}
+.feas{fill:rgba(31,122,92,.22);stroke:#1f7a5c;stroke-width:2}
+line.c1{stroke:#3a6ea5;stroke-width:2.5}line.c2{stroke:#8a5cb8;stroke-width:2.5}line.c3{stroke:#b5832a;stroke-width:2.5}
+line.iso{stroke:#c8553d;stroke-width:2.5;stroke-dasharray:8 6}
+.lbl{font-size:14px;font-weight:600}.lbl.c1{fill:#3a6ea5}.lbl.c2{fill:#8a5cb8}.lbl.c3{fill:#b5832a}.lbl.iso{fill:#c8553d}
+.vtx{fill:#22252b}.best{fill:#c8553d;stroke:#fff;stroke-width:2}.vl{font-size:14px}.bestl{font-weight:700;fill:#c8553d}
+.quiz .qq{margin-bottom:16px}.quiz p{margin-bottom:6px;font-size:24px}
+.opts{display:flex;gap:14px}
+.opts button{font:inherit;font-size:22px;padding:6px 22px;border-radius:10px;border:2px solid var(--line);background:#fff;cursor:pointer}
+.opts button.ok{border-color:var(--acc);background:#e4f3ec}.opts button.no{border-color:var(--acc2);background:#fbe7e2}
+.exp{visibility:hidden;color:var(--mute);font-size:20px!important}.exp.show{visibility:visible}
+#nav{display:flex;justify-content:flex-end;padding:10px 18px;display:flex;gap:8px;z-index:5}
+#nav button{font-size:16px;padding:8px 14px;border:none;border-radius:8px;background:rgba(255,255,255,.85);cursor:pointer}
+#bar{position:absolute;left:0;bottom:0;height:4px;background:var(--acc);transition:width .2s}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+<section class='slide cover' data-id='1'><div class='inner'><h2>線性規劃入門</h2><div class='content'><p class='sub'>用一間手搖飲店，學會「在有限資源下做出最好的決定」</p><p class='meta'>知識來源：自建 LP Wiki（6 篇資料 ingest）</p></div></div><footer>Wiki 來源：線性規劃是什麼<span>1 / 15</span></footer></section>
+<section class='slide' data-id='2'><div class='inner'><h2>先想一個問題</h2><div class='content'><p>你開了一家手搖飲店，每天要決定：<b>奶茶</b>和<b>紅茶</b>各煮幾桶？</p><ul><li>奶茶每桶賺 300 元，紅茶每桶賺 200 元</li><li>但茶葉每天只有 50 包、牛奶只有 60 公升、工時只有 80 單位</li></ul><p class='q'>全部煮奶茶？牛奶不夠。怎麼搭配才賺最多？</p></div></div><footer>Wiki 來源：例題-手搖飲店<span>2 / 15</span></footer></section>
+<section class='slide' data-id='3'><div class='inner'><h2>線性規劃是什麼？</h2><div class='content'><p class='big'>在<b>有限資源</b>下，找出讓<b>目標最好</b>的決策。</p><ul><li>目標和限制都必須是<b>線性</b>的：每個變數只出現一次方，不會有 x² 或 x·y</li><li>常見用途：生產規劃、運輸排程、人員指派、資源分配</li><li>Dantzig 的經典例子：70 個人分配 70 份工作，窮舉不可能，LP 很快就能解出</li></ul></div></div><footer>Wiki 來源：線性規劃是什麼<span>3 / 15</span></footer></section>
+<section class='slide' data-id='4'><div class='inner'><h2>寫模型只要回答三個問題</h2><div class='content'><div class='cards'><div><h3>① 決策變數</h3><p>我要決定什麼？</p><code>x1, x2, …</code></div><div><h3>② 目標函數</h3><p>我要讓什麼最好？</p><code>max / min z</code></div><div><h3>③ 限制式</h3><p>我被什麼限制？</p><code>… ≤ 資源量，x ≥ 0</code></div></div><p>滿足所有限制的一組答案叫<b>可行解</b>。</p></div></div><footer>Wiki 來源：模型三要素<span>4 / 15</span></footer></section>
+<section class='slide' data-id='5'><div class='inner'><h2>動手：把手搖飲店寫成模型</h2><div class='content'><p>x1 = 奶茶桶數，x2 = 紅茶桶數</p><pre>max  z = 300x1 + 200x2      ← 利潤
+s.t.  x1 +  x2 ≤ 50        ← 茶葉
+      2x1       ≤ 60        ← 牛奶
+      x1 + 2x2 ≤ 80        ← 工時
+      x1, x2 ≥ 0</pre></div></div><footer>Wiki 來源：例題-手搖飲店、模型三要素<span>5 / 15</span></footer></section>
+<section class='slide' data-id='6'><div class='inner'><h2>什麼問題能用 LP？四大假設</h2><div class='content'><table><tr><th>假設</th><th>白話</th><th>破功的例子</th></tr><tr><td>比例性</td><td>買 2 倍就付 2 倍錢</td><td>量販折扣</td></tr><tr><td>可加性</td><td>各項貢獻直接相加</td><td>兩種食材互相影響</td></tr><tr><td>可分割性</td><td>答案可以是小數</td><td>車子不能買 0.7 台</td></tr><tr><td>確定性</td><td>數字都已知且不變</td><td>需求其實是預測值</td></tr></table></div></div><footer>Wiki 來源：四大假設<span>6 / 15</span></footer></section>
+<section class='slide' data-id='7'><div class='inner'><h2>可行域：所有可行解圍出的區域</h2><div class='content'><ul><li>把每條限制畫成一條線，全部重疊的地方就是<b>可行域</b></li><li>它是一個沒有凹洞的多邊形</li><li>關鍵事實：最佳解一定可以在某個<b>頂點</b>（角落）找到</li><li>所以不用檢查無限多個點，只要檢查角落！</li></ul></div></div><footer>Wiki 來源：可行域與頂點<span>7 / 15</span></footer></section>
+<section class='slide' data-id='8'><div class='inner'><h2>圖解法：畫出手搖飲店</h2><div class='content'><div class='split'><svg viewBox='0 0 620 420' class='chart' role='img' aria-label='手搖飲店可行域'><line x1='50.0' y1='370.0' x2='50.0' y2='50.0' class='grid'/><text x='50.0' y='388.0' class='tick' text-anchor='middle'>0</text><line x1='144.54545454545456' y1='370.0' x2='144.54545454545456' y2='50.0' class='grid'/><text x='144.54545454545456' y='388.0' class='tick' text-anchor='middle'>10</text><line x1='239.0909090909091' y1='370.0' x2='239.0909090909091' y2='50.0' class='grid'/><text x='239.0909090909091' y='388.0' class='tick' text-anchor='middle'>20</text><line x1='333.6363636363636' y1='370.0' x2='333.6363636363636' y2='50.0' class='grid'/><text x='333.6363636363636' y='388.0' class='tick' text-anchor='middle'>30</text><line x1='428.1818181818182' y1='370.0' x2='428.1818181818182' y2='50.0' class='grid'/><text x='428.1818181818182' y='388.0' class='tick' text-anchor='middle'>40</text><line x1='522.7272727272727' y1='370.0' x2='522.7272727272727' y2='50.0' class='grid'/><text x='522.7272727272727' y='388.0' class='tick' text-anchor='middle'>50</text><line x1='50.0' y1='370.0' x2='570.0' y2='370.0' class='grid'/><text x='42.0' y='374.0' class='tick' text-anchor='end'>0</text><line x1='50.0' y1='306.0' x2='570.0' y2='306.0' class='grid'/><text x='42.0' y='310.0' class='tick' text-anchor='end'>10</text><line x1='50.0' y1='242.0' x2='570.0' y2='242.0' class='grid'/><text x='42.0' y='246.0' class='tick' text-anchor='end'>20</text><line x1='50.0' y1='178.0' x2='570.0' y2='178.0' class='grid'/><text x='42.0' y='182.0' class='tick' text-anchor='end'>30</text><line x1='50.0' y1='114.0' x2='570.0' y2='114.0' class='grid'/><text x='42.0' y='118.0' class='tick' text-anchor='end'>40</text><line x1='50.0' y1='50.0' x2='570.0' y2='50.0' class='grid'/><text x='42.0' y='54.0' class='tick' text-anchor='end'>50</text><polygon points='50.0,370.0 333.6,370.0 333.6,242.0 239.1,178.0 50.0,114.0' class='feas'/><line x1='50.0' y1='50.0' x2='522.7' y2='370.0' class='c1'/><text x='466.0' y='312.4' class='lbl c1'>茶葉 x₁+x₂=50</text><line x1='333.6' y1='370.0' x2='333.6' y2='50.0' class='c2'/><text x='343.1' y='69.2' class='lbl c2'>牛奶 x₁=30</text><line x1='50.0' y1='114.0' x2='570.0' y2='290.0' class='c3'/><text x='428.2' y='222.8' class='lbl c3'>工時 x₁+2x₂=80</text><line x1='459.7' y1='370.0' x2='176.1' y2='82.0' class='iso'/><text x='177.6' y='75.6' class='lbl iso'>利潤 = 13000</text><circle cx='50.0' cy='370.0' r='5' class='vtx'/><text x='59.5' y='360.4' class='vl'>(0,0)</text><circle cx='333.6' cy='370.0' r='5' class='vtx'/><text x='343.1' y='360.4' class='vl'>(30,0)</text><circle cx='333.6' cy='242.0' r='8' class='best'/><text x='248.5' y='261.2' class='vl bestl'>(30,20) 最佳</text><circle cx='239.1' cy='178.0' r='5' class='vtx'/><text x='163.5' y='203.6' class='vl'>(20,30)</text><circle cx='50.0' cy='114.0' r='5' class='vtx'/><text x='59.5' y='101.2' class='vl'>(0,40)</text><text x='570.0' y='406.0' class='ax' text-anchor='end'>x₁ 奶茶（桶）</text><text x='50.0' y='34' class='ax'>x₂ 紅茶（桶）</text></svg><div><p>綠色區域 = 可行域</p><p>五個頂點中，<b>(30, 20)</b> 讓利潤最高。</p><p>虛線是「利潤 = 13000」的等利潤線：往右上平移就會離開可行域，所以 13000 已經是最大。</p></div></div></div></div><footer>Wiki 來源：圖解法、例題-手搖飲店<span>8 / 15</span></footer></section>
+<section class='slide' data-id='9'><div class='inner'><h2>比較每個頂點</h2><div class='content'><table><tr><th>頂點 (x1, x2)</th><th>利潤 z</th></tr><tr><td>(0, 0)</td><td>0</td></tr><tr><td>(30, 0)</td><td>9000</td></tr><tr class='hl'><td>(30, 20)</td><td>13000 ← 最佳</td></tr><tr><td>(20, 30)</td><td>12000</td></tr><tr><td>(0, 40)</td><td>8000</td></tr></table><p>答案：<b>奶茶 30 桶、紅茶 20 桶，賺 13000 元</b>。茶葉、牛奶剛好用完，工時還剩 10。</p></div></div><footer>Wiki 來源：例題-手搖飲店<span>9 / 15</span></footer></section>
+<section class='slide' data-id='10'><div class='inner'><h2>不是每題都有答案</h2><div class='content'><div class='cards'><div><h3>✅ 有最佳解</h3><p>像手搖飲店</p></div><div><h3>❌ 不可行</h3><p>限制互相矛盾，沒有任何解滿足全部限制</p></div><div><h3>♾️ 無界</h3><p>目標可以無限變好，通常代表模型漏了限制</p></div></div></div></div><footer>Wiki 來源：可行域與頂點、線性規劃是什麼<span>10 / 15</span></footer></section>
+<section class='slide' data-id='11'><div class='inner'><h2>變數一多，電腦怎麼解？單純形法</h2><div class='content'><ol><li>用鬆弛變數把 ≤ 變成 = （鬆弛變數 = 沒用完的資源）</li><li>從一個頂點出發</li><li>找一條能讓利潤變大的邊，走到相鄰頂點（這一步叫樞紐運算）</li><li>沒有更好的邊 → 目前就是最佳解</li></ol><p>Dantzig 在 1947 年為美國空軍發明。最壞情況很慢，但實務上非常快。</p></div></div><footer>Wiki 來源：單純形法、標準型與鬆弛變數<span>11 / 15</span></footer></section>
+<section class='slide' data-id='12'><div class='inner'><h2>LP 小歷史</h2><div class='content'><ul class='timeline'><li><b>1820 年代</b> Fourier 研究線性不等式</li><li><b>1939</b> Kantorovich 研究生產規劃</li><li><b>1947</b> Dantzig 發明單純形法；von Neumann 提出對偶理論</li><li><b>1975</b> Kantorovich、Koopmans 獲諾貝爾經濟學獎</li><li><b>1979</b> Khachiyan 橢球法：理論上快，實務上慢</li><li><b>1984</b> Karmarkar 內點法：理論與實務都快</li></ul></div></div><footer>Wiki 來源：歷史年表、演算法比較<span>12 / 15</span></footer></section>
+<section class='slide' data-id='13'><div class='inner'><h2>附贈的答案：資源值多少錢？</h2><div class='content'><p>每個 LP 都有一個雙胞胎叫<b>對偶問題</b>，它的解就是每種資源的<b>影子價格</b>。</p><table><tr><th>資源</th><th>影子價格</th><th>意思</th></tr><tr><td>茶葉</td><td>200 元/包</td><td>多 1 包，最多多賺 200</td></tr><tr><td>牛奶</td><td>50 元/公升</td><td>多 1 公升，最多多賺 50</td></tr><tr><td>工時</td><td>0</td><td>本來就有剩，再多也沒用</td></tr></table><p>兩邊最佳值都是 13000（強對偶）。</p></div></div><footer>Wiki 來源：對偶與影子價格、例題-手搖飲店<span>13 / 15</span></footer></section>
+<section class='slide' data-id='14'><div class='inner'><h2>如果答案一定要是整數？</h2><div class='content'><ul><li>LP 允許小數，例如解出「0.7 台火車頭」</li><li>如果一定要整數，就變成<b>整數規劃</b>，一般難解很多</li><li>規模夠大時，四捨五入通常就夠用</li></ul></div></div><footer>Wiki 來源：整數規劃、四大假設<span>14 / 15</span></footer></section>
+<section class='slide' data-id='15'><div class='inner'><h2>重點回顧</h2><div class='content'><ol><li>LP = 線性目標 + 線性限制，在有限資源下求最好</li><li>建模三步：決策變數 → 目標函數 → 限制式</li><li>先確認四大假設</li><li>最佳解在可行域的頂點：兩個變數用圖解法，更多用單純形法</li><li>對偶問題告訴你資源的影子價格</li></ol></div></div><footer>Wiki 來源：線性規劃是什麼、模型三要素、可行域與頂點、對偶與影子價格<span>15 / 15</span></footer></section>
+<div id="bar"></div>
+</div></div>
+<div id="nav"><button id="prev" aria-label="上一頁">← 上一頁</button><button id="next" aria-label="下一頁">下一頁 →</button></div>
+<script>
+const S=[...document.querySelectorAll('.slide')];let i=0;
+function fit(){const st=document.getElementById('stage'),wr=document.getElementById('wrap');const vw=document.documentElement.clientWidth||innerWidth;let k=vw/1280;if(innerHeight>=420)k=Math.min(k,(innerHeight-60)/720);wr.style.width=(1280*k)+'px';wr.style.height=(720*k)+'px';st.style.transform=`scale(${k})`}
+function go(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach((s,j)=>s.classList.toggle('on',j===i));document.getElementById('bar').style.width=((i+1)/S.length*100)+'%';try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(i+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(i-1)}});
+document.getElementById('next').onclick=()=>go(i+1);document.getElementById('prev').onclick=()=>go(i-1);
+document.querySelectorAll('.opts button').forEach(b=>b.onclick=()=>{b.classList.add(b.dataset.ok==='1'?'ok':'no');if(b.dataset.ok==='1')document.getElementById('e'+b.dataset.q).classList.add('show')});
+addEventListener('resize',fit);fit();go((parseInt(location.hash.slice(1))||1)-1);
+</script>
+</body>
+</html>
